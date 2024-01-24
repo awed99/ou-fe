@@ -1,0 +1,12 @@
+.titleConfirm {
+    margin-top: 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #12a4d9;
+}
+
+.titleConfirmSuccess {
+    color: #C7C7C7;
+    margin-top: 30px;
+    font-size: 100%;
+}

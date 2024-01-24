@@ -1,0 +1,30 @@
+.textIcon1a {
+    margin-top: 80px;
+    width: 350px;
+    color: #EFEFEF;
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 138%; /* 33.12px */
+    letter-spacing: 0.15px;
+}
+
+.textIcon1b {
+    margin-top: 20px;
+    color: #EFEFEF;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 138%; /* 22.08px */
+    letter-spacing: 0.15px;
+}
+
+.textKeepMeLoggedIn {
+    color: #2A2A2A;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}

@@ -1,0 +1,37 @@
+{
+  "name": "otpus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 40011",
+    "build": "next build",
+    "start": "next start",
+    "start2": "node app.js --max-old-space-size=500",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-free": "^6.5.1",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/lab": "^5.0.0-alpha.156",
+    "@mui/material": "^5.14.5",
+    "@mui/styles": "^5.14.20",
+    "@mui/system": "^5.14.5",
+    "@tinymce/tinymce-react": "^4.3.2",
+    "crypto-js": "^4.2.0",
+    "eslint": "8.47.0",
+    "eslint-config-next": "13.4.16",
+    "libphonenumber-js": "^1.10.52",
+    "mdb-react-ui-kit": "^7.0.0",
+    "next": "13.4.16",
+    "primereact": "^10.2.1",
+    "react": "18.2.0",
+    "react-countdown": "^2.3.5",
+    "react-countdown-simple": "^1.0.12",
+    "react-dom": "18.2.0",
+    "react-google-recaptcha": "^3.1.0",
+    "react-phone-number-input": "^3.3.3",
+    "socket.io-client": "^4.7.2"
+  }
+}

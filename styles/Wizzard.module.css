@@ -1,0 +1,62 @@
+.preTitle {
+    margin-top: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2A2A2A;
+    text-align: center;
+}
+
+.preBoxTitle {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2A2A2A;
+    text-align: center;
+}
+
+.preBoxText {
+    margin-top: 10px;
+    width: 90%;
+    font-size: 11px;
+    color: #2A2A2A;
+    text-align: center;
+}
+
+.css3Shadow {
+    width: 250px;
+    height: 200px;
+    position:relative;
+    display: flex;
+    border-radius: 10px;
+    -webkit-box-shadow:0 1px 7px rgba(0, 0, 0, 0.3);
+    box-shadow:0 1px 7px rgba(0, 0, 0, 0.3);
+}
+
+.css3ShadowSelected {
+    width: 250px;
+    height: 200px;
+    position:relative;
+    display: flex;
+    border-radius: 10px;
+    -webkit-box-shadow:0 1px 7px rgba(15, 109, 14, 0.9);
+    box-shadow:0 1px 7px rgba(15, 109, 14, 0.9);
+}
+
+.css3Shadow:after {
+    /* content:""; */
+    /* position:absolute; */
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    bottom:0px;
+    left:10%;
+    right:10%;
+    width:80%;
+    height:50%;
+    -moz-border-radius:100%;
+    border-radius:100%;
+}
+
+.menuText {
+    font-weight: bold !important;
+}

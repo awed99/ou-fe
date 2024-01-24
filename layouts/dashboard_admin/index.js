@@ -195,10 +195,10 @@ function ResponsiveDrawer({children}) {
               OTP-US ADMIN
             </Typography>
           </div>
-          {(token !== '') && <Button variant="contained" color='warning' onClick={() => window.location = ('/admin/wallet')}>
+          {(token !== '') && <Button variant="contained" color='warning' onClick={() => window.location = ('/admin/deposit')}>
             Rp &nbsp;{number_format(chipper?.balance_idr)}
           </Button>}
-          {(token !== '') && <Button variant="contained" color='error' onClick={() => window.location = ('/admin/wallet')}>
+          {(token !== '') && <Button variant="contained" color='error' onClick={() => window.location = ('/admin/deposit')}>
             {currency_format(chipper?.balance_usd)}
           </Button>}
           <Chip size="large"

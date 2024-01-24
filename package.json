@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 40011",
-    "build": "next build",
+    "build": "next build --profile",
     "start": "next start",
     "start2": "node app.js",
     "lint": "next lint"

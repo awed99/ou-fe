@@ -123,6 +123,7 @@ export default function Deposit() {
         type: (res?.code == 1) ? 'error' : 'success',
         message: res?.message
       })
+      setAmountWithdraw('')
       setDatas(res?.data)
       setLoading(false)
     }).catch(() => setLoading(false))
@@ -184,7 +185,7 @@ export default function Deposit() {
                             (data) => data?.username
                         } />
                         <Column key={'created_datetime'} field={'created_datetime'} header={'Date'} body={
-                            (data) => moment(data?.created_datetime).format('ddd, DD MMM YYYY - HH:mm')
+                            (data) => moment(data?.created_at).format('ddd, DD MMM YYYY - HH:mm')
                         } />
                         <Column key={'amount_credit'} field={'amount_credit'} header={'Credit IDR'} body={
                             (data) => number_format(data?.amount_credit)

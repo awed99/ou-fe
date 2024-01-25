@@ -13,15 +13,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CryptoJS from "crypto-js";
 import { filter } from 'lodash';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import React from 'react';
 import Store from 'store';
 import Header from './header';
 
 import { AccountCircle, ArrowDropDown, Login, Logout, Menu as MenuIcon, Settings } from '@mui/icons-material';
 
-import { size } from 'lodash';
 import ModalDialog from '../../components/dialog';
 import SideBar from './sidebar';
 
@@ -29,9 +29,11 @@ import { currency_format, generateSignature } from '../../helpers/general';
 
 const drawerWidth = 240;
 
-function ResponsiveDrawer({children}) {
+function ResponsiveDrawer({children, listCountries}) {
   const router = useRouter()
+  // const [listCountry, setListCountry] = React.useState([])
   const [running, setRunning] = React.useState(true)
+  const [timeNow, setTimeNow] = React.useState(moment())
   const [token, setToken] = React.useState('')
   const [openModal, setOpenModal] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -118,7 +120,11 @@ function ResponsiveDrawer({children}) {
       })
       .then(res => res.json())
       .then(res => {
+        // setListCountry(res?.data)
         // Store.set('curs', res?.data?.curs)
+        if (listCountries) {
+          listCountries(res?.data)
+        }
         Store.set('list_countries', res?.data)
         Store.set('curs', res?.curs)
         
@@ -130,7 +136,7 @@ function ResponsiveDrawer({children}) {
         Store.set('languages', filter(res?.languages?.setting_language, ['id_base_language', _idDataLang]))
         // Store.set('myIntervalUser', 0)
       })
-      .then(() => window.location = ('/'))
+      // .then(() => window.location = ('/'))
   }
 
   const handleSetToken = () => {
@@ -149,12 +155,17 @@ function ResponsiveDrawer({children}) {
   }, [token])
 
   React.useEffect(() => {
+    updateCountry()
     if (running) {
       // updateSaldo()
     }
-    if (size(Store.get('list_countries')) < 1) {
-      updateCountry()
-    }
+    // if (size(Store.get('list_countries')) < 1) {
+    //   updateCountry()
+    // }
+
+    setInterval(() => {
+      setTimeNow(moment())
+    }, 1000)
     
     setTimeout(() => handleSetToken(), 1000)
     // const intervalId = setInterval(() => {
@@ -197,6 +208,7 @@ function ResponsiveDrawer({children}) {
           {(token !== '') && <Button variant="contained" color='error' onClick={() => router.push('/wallet')}>
             {currency_format(parseFloat(chipper))}
           </Button>}
+
           <Chip size="large"
             aria-describedby={idPopover}
             onClick={(e) => setAnchorElPopover(e?.currentTarget)}
@@ -294,6 +306,13 @@ function ResponsiveDrawer({children}) {
       >
         <Toolbar />
         {children}
+        {/* {children({listCountries: listCountries})} */}
+        {/* {Children.map(children, (child, index) =>
+          React.cloneElement(child, {
+            listCountries: listCountries
+          })
+        )}
+        {React.cloneElement(children, { listCountries: listCountries })} */}
       </Box>
 
       <ModalDialog titleModal="Logout Confirmation" openModal={openModal} setOpenModal={setOpenModal} handleSubmitFunction={handleLogout}>

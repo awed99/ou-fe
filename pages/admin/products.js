@@ -10,6 +10,7 @@ import {
   Grid,
   Link,
   Snackbar,
+  Switch,
   TextField,
 } from '@mui/material';
 import CryptoJS from "crypto-js";
@@ -52,6 +53,8 @@ export default function Products() {
   const [dataProductPriceIDR, setDataProductPriceIDR] = React.useState('');
   const [dataProductPriceUSD, setDataProductPriceUSD] = React.useState('');
   const [dataProductIsFile, setDataProductIsFile] = React.useState(false);
+  const [dataProductStatus, setDataProductStatus] = React.useState(true);
+  const [changeStatus, setChangeStatus] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState({
     open: false,
     type: 'success',
@@ -80,9 +83,9 @@ export default function Products() {
     .then(res => {
       setCurs(res?.curs)
       setDatas(res?.data)
-      setTimeout(() => {
-        getDatas()
-      }, 10000)
+      // setTimeout(() => {
+      //   getDatas()
+      // }, 10000)
     }).catch(() => setLoading(false))
   }
 
@@ -110,6 +113,14 @@ export default function Products() {
     .then(res => {
       setOpenModal(false)
       setOpenModal2(false)
+      setChangeStatus(false)
+      setCountryDataSelected(false)
+      setDataProductCode('')
+      setDataProductName('')
+      setDataProductPriceUSD('')
+      setDataProductPriceIDR('')
+      setDataProductIsFile(false)
+      setDataProductStatus(false)
       setAlertMessage({
         open: true,
         type: (res?.code > 0) ? 'error' : 'success',
@@ -125,6 +136,7 @@ export default function Products() {
     const _uri = 'admin/products/update'
     const _secret = await generateSignature(_uri)
 
+    setLoading(true)
     fetch(`${process.env.NEXT_PUBLIC_BE_API_DOMAIN}${_uri}`, {
         method: 'POST',
         headers: {
@@ -132,19 +144,30 @@ export default function Products() {
           'x-timestamp': _secret?.timestamp,
           'Authorization': CryptoJS.AES.decrypt(Store.get('token_admin') ?? '', process.env.NEXT_PUBLIC_APP_API_KEY).toString(CryptoJS.enc.Utf8).replace(/\"/g, ''),
         },
-        body: JSON.stringify({
+        body: JSON.stringify((changeStatus) ? {
             "id": dataDetail?.id,
-            "id_country": countryDataSelected?.id,
-            "operator_code": dataProductCode,
-            "operator_name": dataProductName,
-            "op_price": dataProductPriceUSD,
-            "is_file": dataProductIsFile
+            "status": (dataProductStatus === true) ? 1 : 0
+        } : {
+          "id": dataDetail?.id,
+          "id_country": countryDataSelected?.id,
+          "operator_code": dataProductCode,
+          "operator_name": dataProductName,
+          "op_price": dataProductPriceUSD,
+          "is_file": dataProductIsFile
         })
     })
     .then(res => res.json())
     .then(res => {
       setOpenModal(false)
       setOpenModal2(false)
+      setChangeStatus(false)
+      setCountryDataSelected(false)
+      setDataProductCode('')
+      setDataProductName('')
+      setDataProductPriceUSD('')
+      setDataProductPriceIDR('')
+      setDataProductIsFile(false)
+      setDataProductStatus(false)
       setAlertMessage({
         open: true,
         type: (res?.code > 0) ? 'error' : 'success',
@@ -152,7 +175,8 @@ export default function Products() {
       })
       setCurs(res?.curs)
       setDatas(res?.data)
-      getDatas()
+      // getDatas()
+      setTimeout(() => setLoading(false), 2500)
     }).catch(() => setLoading(false))
   }
   
@@ -167,12 +191,19 @@ export default function Products() {
   }, [])
   
   useEffect(() => {
+    if (size(dataProductPriceUSD) > 1 && (changeStatus === true)) {
+      updateData(true)
+    }
+  }, [changeStatus, dataProductPriceUSD])
+  
+  useEffect(() => {
     if (size(dataDetail) > 0) {
       setDataProductCode(dataDetail?.operator_code)
       setDataProductName(dataDetail?.operator_name)
       setDataProductPriceUSD(dataDetail?.op_price)
       setDataProductPriceIDR(parseInt(parseFloat(dataDetail?.op_price) * parseFloat(curs?.curs_usd_to_idr)))
       setDataProductIsFile(dataDetail?.is_file === "1")
+      // setDataProductStatus(dataDetail?.status)
     } else {
       setCountryDataSelected(false)
       setDataProductCode('')
@@ -180,6 +211,7 @@ export default function Products() {
       setDataProductPriceUSD('')
       setDataProductPriceIDR('')
       setDataProductIsFile(false)
+      setDataProductStatus(false)
     }
   }, [dataDetail])
   
@@ -232,6 +264,9 @@ export default function Products() {
                   } />
                   <Column key={'op_price_idr'} field={'op_price_idr'} header={'Price IDR'} body={
                       (data) => number_format(Math.ceil(parseFloat(data?.op_price) * parseFloat(curs?.curs_usd_to_idr))) ?? '0'
+                  } />
+                  <Column key={'status'} field={'status'} header={'Status'} body={
+                      (data) => <Switch checked={data?.status === '1'} onClick={() => {setDataDetail(data); setDataProductStatus((data?.status === '1') ? false : true); setChangeStatus(true)}} />
                   } />
                   <Column key={'Action'} field={'Action'} header={'Action'} body={
                       (data) => <Link onClick={() => {setDataDetail(data); setCountryDataSelected(filter(countries, ['id', data?.id_country?.toString()])[0]); setOpenModal2(true);}}>Update</Link>

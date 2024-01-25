@@ -14,8 +14,9 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import CryptoJS from "crypto-js";
 import { size } from 'lodash';
+import moment from 'moment';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Store from 'store';
 
 import {
@@ -31,6 +32,7 @@ import { generateSignature } from '../../helpers/general';
 export default function HeaderAuth({children}) {
   const router = useRouter()
   const _user = Store.get('user') ? (CryptoJS.AES.decrypt(Store.get('user') ?? '', process.env.NEXT_PUBLIC_APP_API_KEY).toString(CryptoJS?.enc?.Utf8)) : '{}'
+  const [timeNow, setTimeNow] = React.useState(moment())
   const [openModal, setOpenModal] = React.useState(false)
   const [openModal2, setOpenModal2] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
@@ -108,6 +110,12 @@ export default function HeaderAuth({children}) {
     }).catch(() => setLoading(false))
   }
 
+  useEffect(() => {
+    setInterval(() => {
+      setTimeNow(moment())
+    }, 1000)
+  }, [])
+
   const buttonDialogs = (
     <Button onClick={handleChangeAPIKey}>
       Generate New API Key
@@ -119,6 +127,7 @@ export default function HeaderAuth({children}) {
         <Toolbar onClick={() => window.location = ('/')} sx={{mt: 4}}>
           <img src="/images/logo.png"  width="80" height="80"/>
         </Toolbar>
+        <Box sx={{pl:3, pr:3, mt: 3, mb:-1, fontSize: '12px'}}>(App Time)<br/>{timeNow.format('ddd, DD MMM YYYY - HH:mm:ss')}</Box>
         <List sx={{mt: 3, ml: 2, mr: 2}}>
           <ListItem disablePadding onClick={() => window.location = ('/')}>
             <ListItemButton>

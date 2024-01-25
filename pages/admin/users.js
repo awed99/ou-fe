@@ -224,6 +224,9 @@ export default function Users() {
                         <Column key={'created_date'} field={'created_date'} header={'Regist Date'} body={
                             (data) => moment(data?.created_date).format('ddd, DD MMM YYYY - HH:mm')
                         } />
+                        <Column key={'last_login'} field={'last_login'} header={'Last Login'} body={
+                            (data) => moment(data?.last_login).format('ddd, DD MMM YYYY - HH:mm')
+                        } />
                         <Column key={'last_ip_address'} field={'last_ip_address'} header={'Last IP'} body={
                             (data) => data?.last_ip_address
                         } />

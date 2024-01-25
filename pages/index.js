@@ -50,9 +50,11 @@ export default function Dashboard() {
   const [loading2, setLoading2] = React.useState(false);
   const [onCanceling, setOnCanceling] = React.useState(false);
   const [tabValue, setTabValue] = useState(1)
+  const [countries, setCountries] = React.useState([]);
+  const [listCountry, setListCountry] = React.useState([])
+  const [operatorsData, setOperatorsData] = React.useState([]);
   const [countrySelected, setCountrySelected] = React.useState('ID');
   const [countryDataSelected, setCountryDataSelected] = React.useState({"label":'Indonesia', "code":'ID', "id":"6"});
-  const [operatorsData, setOperatorsData] = React.useState([]);
   const [operatorSelected, setOperatorSelected] = React.useState('');
   const [services, setServices] = React.useState([]);
   const [servicesTotal, setServicesTotal] = React.useState(0);
@@ -92,6 +94,33 @@ export default function Dashboard() {
     const res = await handleSubmitConfirm(e, schemaData, values)
     
     // console.log('res: ', res)
+  }
+
+  const getCountries = async () =>{
+    const _uri = 'service/get_operators1'
+    const _secret = await generateSignature(_uri)
+
+    fetch(`${process.env.NEXT_PUBLIC_BE_API_DOMAIN}${_uri}`, {
+        method: 'POST',
+        headers: {
+          'x-signature': _secret?.signature,
+          'x-timestamp': _secret?.timestamp,
+        }
+    })
+    .then(res => res.json())
+    .then(res => {
+      const countries = Store.get('list_countries')
+      const _data = []
+      res?.data.map(dt => {
+        const __data = {
+          id: parseInt(dt?.id_country),
+          code: filter(countries, ['id', dt?.id_country])[0]?.country_code,
+          label: filter(countries, ['id', dt?.id_country])[0]?.country,
+        }
+        _data.push(__data)
+      })
+      setCountries(_data)
+    })
   }
 
   const getOperators = async () =>{
@@ -137,6 +166,7 @@ export default function Dashboard() {
   }
   
   useEffect(() => {
+    getCountries()
     const _x = setInterval(() => {
       setListActivations(Store.get('list_activations'))
     }, 1000)
@@ -290,7 +320,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Layout type="dashboard">
+      <Layout type="dashboard" listCountries={e => setListCountry(e)}>
         <Box sx={{ background: 'none', flexGrow: 0, alignItems: 'center', justifyContent: 'center', minHeight: '87.9vh' }}>
           <Grid container>
             <Grid item xs={12}
@@ -333,19 +363,19 @@ export default function Dashboard() {
                       </Box> */}
 
                       <Box sx={{mt:2}}>
-                        {((tabValue === 1) && Store.get('list_countries')) && <>
+                        {((tabValue === 1) && listCountry) && <>
                           <b>
-                            1 Country Available
+                            {size(countries)} Country Available
                           </b>
                           <Autocomplete
                             sx={{mt:1}}
                             disableClearable
                             id="country-select-demo"
                             size="small"
-                            onAbort={() => {setCountrySelected('ID'); setCountryDataSelected({"label":"Indonesia", "code": "ID", "id":"6"});}}
+                            // onAbort={() => {setCountrySelected('ID'); setCountryDataSelected({"label":"Indonesia", "code": "ID", "id":"6"});}}
                             value={countryDataSelected || []}
                             onChange={(i, val) => {setOperatorSelected(''); setCountrySelected(val?.code); setCountryDataSelected(val);}}
-                            options={[{"label":"Indonesia", "code": "ID", "id":"6"}]}
+                            options={countries}
                             autoHighlight
                             getOptionLabel={(option) => option?.label}
                             renderOption={(props, option) => (
@@ -434,7 +464,7 @@ export default function Dashboard() {
 
                   <Grid item xs={12} md={12} xl={8} lg={8}>
                   
-                  <h3 style={{marginTop: '-45px'}}>{availLists} Available Products List</h3>
+                  <h3 style={{marginTop: '-25px'}}>{availLists} Available Products List</h3>
                   <List
                         sx={{ width: '100%', bgcolor: 'background.paper', border: '1px solid black', borderRadius: '10px',
                         overflow: 'auto', maxHeight: 420, mt: '10px' }}

@@ -21,7 +21,6 @@ import Header from './header';
 
 import { AccountCircle, ArrowDropDown, Login, Logout, Menu as MenuIcon, Settings } from '@mui/icons-material';
 
-import { size } from 'lodash';
 import ModalDialog from '../../components/dialog';
 import SideBar from './sidebar';
 
@@ -39,7 +38,6 @@ function ResponsiveDrawer({children}) {
   const [chipper, setChipper] = React.useState({});
   const openPopover = anchorElPopover ?? false
   const idPopover = openPopover ? 'simple-popover' : undefined;
-
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -119,6 +117,8 @@ function ResponsiveDrawer({children}) {
       .then(res => res.json())
       .then(res => {
         // Store.set('curs', res?.data?.curs)
+        // setListCountries(res?.data)
+        // listCountries(res?.data)
         Store.set('list_countries', res?.data)
         
         const _idDataLang = filter(res?.languages?.base_languages, ['language_code', 'EN_US'])[0]?.id
@@ -129,7 +129,7 @@ function ResponsiveDrawer({children}) {
         Store.set('languages', filter(res?.languages?.setting_language, ['id_base_language', _idDataLang]))
         // Store.set('myIntervalUser', 0)
       })
-      .then(() => window.location = ('/'))
+      // .then(() => window.location = ('/admin'))
   }
 
   const handleSetToken = () => {
@@ -149,12 +149,13 @@ function ResponsiveDrawer({children}) {
   }, [token])
 
   React.useEffect(() => {
+    updateCountry()
     if (running) {
       // updateSaldo()
     }
-    if (size(Store.get('list_countries')) < 1) {
-      updateCountry()
-    }
+    // if (size(Store.get('list_countries')) < 1) {
+    //   updateCountry()
+    // }
     
     setTimeout(() => handleSetToken(), 1000)
     // const intervalId = setInterval(() => {
@@ -196,7 +197,7 @@ function ResponsiveDrawer({children}) {
             </Typography>
           </div>
           {(token !== '') && <Button variant="contained" color='warning' onClick={() => window.location = ('/admin/deposit')}>
-            Rp &nbsp;{number_format(chipper?.balance_idr)}
+            {number_format(chipper?.balance_idr)}
           </Button>}
           {(token !== '') && <Button variant="contained" color='error' onClick={() => window.location = ('/admin/deposit')}>
             {currency_format(chipper?.balance_usd)}

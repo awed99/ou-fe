@@ -5,7 +5,7 @@ import Dashboard from './dashboard';
 import DashboardAdmin from './dashboard_admin';
 import Wizzard from './wizzard';
 
-const Layout = ({children, type}) => {
+const Layout = ({children, type, listCountries=false}) => {
     
     return(<>
         {
@@ -21,10 +21,10 @@ const Layout = ({children, type}) => {
             (type === 'wizzard') && <Wizzard>{children}</Wizzard>
         }
         {
-            (type === 'dashboard') && <Dashboard>{children}</Dashboard>
+            (type === 'dashboard') && <Dashboard listCountries={listCountries}>{children}</Dashboard>
         }
         {
-            (type === 'dashboard_admin') && <DashboardAdmin>{children}</DashboardAdmin>
+            (type === 'dashboard_admin') && <DashboardAdmin listCountries={listCountries}>{children}</DashboardAdmin>
         }
     </>)
 }

@@ -53,6 +53,7 @@ export default function Wallet() {
 
   const paymentMethods = [
     {id: 11, label: 'QRIS (max USD 500)'},
+    {id: 21, label: 'Crypto Payment'},
     {id: 1, label: 'Virtual Account Bank BCA'},
     {id: 2, label: 'Virtual Account Bank BRI'},
     {id: 3, label: 'Virtual Account Bank CIMB'},
@@ -156,8 +157,8 @@ export default function Wallet() {
         setLoading(false)
         return false
       }
-      if (valuePM?.id >= 12 && valuePM?.id <= 16) {
-        window.open(res?.data?.checkout_url, '_blank').focus();
+      if (valuePM?.id >= 12 && valuePM?.id <= 21) {
+        window.open(res?.data?.checkout_url ?? res?.data?.invoice_url, '_blank').focus();
         getDatas()
       } else {
         getDatas(true)
@@ -263,7 +264,17 @@ export default function Wallet() {
                 <Box>
                     <DataTable value={datas} size={'large'} paginator rows={10} rowsPerPageOptions={[10, 25, 50, 100]} tableStyle={{ minWidth: '1rem' }}>
                         <Column key={'no'} field={'no'} header={'Topup Inv'} body={
-                            (data) => ((data?.status !== 'Pending') ? <p style={{color: 'gray'}}>{(data?.invoice_number)}</p> : <Link onClick={() => {(parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 16) ? window.open(data?.link_url, '_blank').focus() : setDataDetail(data); (parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 16) ? setOpenModal(false) :  setOpenModal(true)}}>{(data?.invoice_number)}</Link>)
+                            (data) => ((data?.status !== 'Pending') ? 
+                            <p style={{color: 'gray'}}>{(data?.invoice_number)}</p> : 
+                            <Link onClick={() => {
+                              (parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 21) ? 
+                              window.open(data?.link_url, '_blank').focus() : 
+                              setDataDetail(data); 
+
+                              (parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 21) ? 
+                              setOpenModal(false) :  
+                              setOpenModal(true)
+                            }}>{(data?.invoice_number)}</Link>)
                         } />
                         <Column key={'updated_datetime'} field={'updated_datetime'} header={'Expired Date'} body={
                             (data) => data?.expired_date
@@ -275,7 +286,16 @@ export default function Wallet() {
                             (data) => data?.amount
                         } />
                         <Column key={'status'} field={'status'} header={'Status'} body={
-                            (data) => ((data?.status === 'Expired') ? <p style={{color: 'red'}}>{data?.status}</p> : <Link onClick={() => {(parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 16) ? window.open(data?.link_url, '_blank').focus() : setDataDetail(data); (parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 16) ? setOpenModal(false) :  setOpenModal(true)}}>{data?.status}</Link>)
+                            (data) => ((data?.status === 'Expired') ? 
+                            <p style={{color: 'red'}}>{data?.status}</p> : 
+                            <Link onClick={() => {
+                              (parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 21) ? 
+                              window.open(data?.link_url, '_blank').focus() : 
+                              setDataDetail(data); 
+                              
+                              (parseInt(data?.payment_type ?? 0) >= 12 && parseInt(data?.payment_type ?? 0) <= 21) ? 
+                              setOpenModal(false) : 
+                              setOpenModal(true)}}>{data?.status}</Link>)
                         } />
                     </DataTable>
                 </Box>
